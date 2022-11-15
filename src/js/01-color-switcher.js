@@ -10,14 +10,14 @@ function getRandomHexColor() {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
 
-function onStartBtn(event) {
+function onStartBtn() {
   startBtn.setAttribute('disabled', true);
   timerId = setInterval(() => {
     body.style.backgroundColor = getRandomHexColor();
   }, 1000);
 }
 
-function onStopBtn(event) {
+function onStopBtn() {
   startBtn.removeAttribute('disabled');
   clearInterval(timerId);
 }

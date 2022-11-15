@@ -25,11 +25,11 @@ function addLeadingZero(value) {
 }
 
 const startBtn = document.querySelector('[data-start]');
-const days = document.querySelector('[data-days]');
-const hours = document.querySelector('[data-hours]');
-const minutes = document.querySelector('[data-minutes]');
-const seconds = document.querySelector('[data-seconds]');
-const currentDate = new Date();
+const daysVal = document.querySelector('[data-days]');
+const hoursVal = document.querySelector('[data-hours]');
+const minutesVal = document.querySelector('[data-minutes]');
+const secondsVal = document.querySelector('[data-seconds]');
+let selectedDate;
 
 const options = {
   enableTime: true,
@@ -37,9 +37,31 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
+    if (selectedDates[0] - new Date() > 0) {
+      selectedDate = selectedDates[0];
+      startBtn.removeAttribute('disabled');
+    } else {
+      alert('Please choose a date in the future');
+    }
   },
 };
 
 flatpickr('#datetime-picker', options);
 startBtn.setAttribute('disabled', true);
+startBtn.addEventListener('click', onStartBtn);
+
+function onStartBtn() {
+  startBtn.setAttribute('disabled', true);
+  const timerId = setInterval(() => {
+    const { days, hours, minutes, seconds } = convertMs(
+      selectedDate - new Date()
+    );
+    daysVal.textContent = addLeadingZero(days);
+    hoursVal.textContent = addLeadingZero(hours);
+    minutesVal.textContent = addLeadingZero(minutes);
+    secondsVal.textContent = addLeadingZero(seconds);
+    if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
+      clearInterval(timerId);
+    }
+  }, 1000);
+}
